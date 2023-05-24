@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Product from './Product';
 import image from './Images/shop.png';
@@ -8,12 +8,21 @@ import styles from './Products.module.css';
 import { ProductContext } from './Contexts/ProductContextProvider';
 import { CounterContext } from './Contexts/CounterContextProvider';
 import { TotalContext } from './Contexts/TotalContextProvider';
+import { fetchData } from './api';
 import CartProduct from './CartProduct';
 const Products = () => {
     const products = useContext(ProductContext);
     const {num, setNum} = useContext(CounterContext);
     const {total, setTotal} = useContext(TotalContext);
     const [isClicked, setIsClicked] = useState(false);
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        const fetchDataFromApi = async() => {
+            const apiData = await fetchData();
+            setData(apiData);
+        }
+        fetchDataFromApi();
+    },[])
     return (
         <>
         <div style={{display: "flex"}}>
@@ -24,7 +33,8 @@ const Products = () => {
         <div className={isClicked ? styles.counterClicked : styles.counter} style={num > 0 ? {display:""} : {display:"none"}}>{num > 0 ? num : ''}</div>
         <div className={isClicked ? styles.cart : styles.cartclose}>
         {isClicked && 
-            products.map(product => product.number > 0 ? <CartProduct key={product.id} productData={product}/> : "")}
+            data.map(product => true ? <CartProduct key={product.id} productData={product}/> : "")
+        }
             {isClicked && 
             <div className={styles.buy}>
                 <span>Total: {total}$</span>
@@ -32,7 +42,7 @@ const Products = () => {
             </div>}
         </div>
         <div className={styles.productsContainer}>
-           {products.map(product => <Product key={product.id} productData={product}/>)}
+           {data.map(product => <Product key={product.id} productData={product}/>)}
         </div>
         </>
     );

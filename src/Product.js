@@ -20,14 +20,18 @@ const Product = ({productData}) => {
     }
     return (
         <div className={styles.container}>
-            <img className={styles.image} src={productData.image} />
-            <div className={styles.name}>{productData.name}</div>
-            <div className={styles.fx}>
+            <Link style={{textDecoration:"none"}} to={`/products/${productData.id}`}>
+                <img className={styles.image} src={productData.image} />
+            </Link>
+            <Link style={{textDecoration:"none"}} to={`/products/${productData.id}`}>
+                <div className={styles.name}>{productData.title}</div>
+            </Link>
+            <div className={styles.flexDiv}></div>
+            <div className={styles.contentContainer}>
                 <div className={styles.price}>{productData.price}$</div>
                 <button onClick={add} className={styles.add}>+</button>
-                <div className={styles.number}>{productData.number}</div>
+                {/* <div className={styles.number}>{productData.number}</div> */}
                 <button onClick={remove} className={styles.delete}>-</button>
-                <Link style={{textDecoration:"none"}} to={`/products/${productData.id}`}><div className={styles.detail}>Details</div></Link>
             </div>
         </div>
     );
